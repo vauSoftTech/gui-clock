@@ -43,14 +43,16 @@ class Clock(Frame):
         app_height = 150
         x_pos = int( (scr_width - app_width) / 2 )
         y_pos = int( (scr_height - app_height) / 2 )
+        self.display_format = self.load_format_from_config_file()
         self.master.geometry(f"{app_width}x{app_height}+{x_pos}+{y_pos}")
         self.master.title("VAU - Clock")
         self.master.protocol("WM_DELETE_WINDOW", self.client_exit)
         self.master.resizable(False, False)
         self.pack(fill=BOTH, expand=1)
         self.make_widgets()
-        photo = PhotoImage(file = 'logo.png')
+        photo = PhotoImage(file = 'config/logo.png')
         self.master.iconphoto(False, photo)
+        return
 
     def make_widgets(self):
         menu = Menu(self.master)
@@ -63,17 +65,24 @@ class Clock(Frame):
         self.label.configure(font=("Ubuntu Light", 34))
         self.label.after(500, self.update_label)
         self.label.pack()
+        return
 
     def client_exit(self):
         if messagebox.askquestion("Decide", "Are you sure to exit?") == 'yes':
            self.master.destroy()
         else:
            messagebox.showinfo('Return','OK then, you will now return to the application screen')
+        return
 
     def update_label(self):
-        self.label.configure(text="{:%A %B %d, %Y\n%X}".format(dttm.now()))
+        format_str = self.display_format
+        self.label.configure(text=format_str.format(dttm.now()))
         self.master.update()
         self.label.after(500, self.update_label)
+        return
+
+    def load_format_from_config_file(self):
+        return "{:%a, %b %d, %Y\n%X}"
 
 main = Tk()
 app = Clock(main)
