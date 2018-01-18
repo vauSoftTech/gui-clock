@@ -5,7 +5,7 @@
     Copyright    : 2018 January. A. R. Bhatt.
     Organization : VAU SoftTech
     Project      : gui-clock - Simple gui clock using python and tkinter
-    Script Name  : header-template.py
+    Script Name  : clock.py
     License      : GNU General Public License v3.0
 
 
