@@ -82,7 +82,13 @@ class Clock(Frame):
         return
 
     def load_format_from_config_file(self):
-        return "{:%a, %b %d, %Y\n%X}"
+        try:
+            import configparser
+            config = configparser.ConfigParser()
+            config.read('config/config.ini')
+            return config['DEFAULT']['ClockDisplayFormat']
+        except:
+            return "{:%a, %b %d, %Y\n%X}"
 
 main = Tk()
 app = Clock(main)
