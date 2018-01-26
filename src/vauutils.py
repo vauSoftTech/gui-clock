@@ -23,27 +23,38 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
+from pathlib import *
 
 
-def get_run_info(running_file_name):
-    """
-    This routine returns a tuple containing three things.
-    1. Current Working Folder path
-    2. Path of the scrip that is running
-    3. Script Name
-    """
+class RunInfo:
 
-    from inspect import currentframe, getframeinfo
-    from pathlib import Path, PurePath
-    import os
+    def __init__(self):
+        return
 
-    curr_working_dir = PurePath(os.getcwd())
-    if running_file_name is not None:
-        script_name = PurePath(running_file_name)
-        script_path = PurePath(Path(script_name).resolve().parent)
-    else:
-        script_name = PurePath(getframeinfo(currentframe()).filename)
-        script_path = PurePath(Path(script_name).resolve().parent)
+    @classmethod
+    def get_user_home(cls):
+        return str(Path.home())
 
-    return curr_working_dir, script_path, script_name
+    @classmethod
+    def get_cwd(cls):
+        return str(Path.cwd())
 
+    @classmethod
+    def is_running_from_home_folder(cls):
+        return cls.get_user_home() == cls.get_cwd()
+
+    @classmethod
+    def get_script_filename(cls, script_path_and_name):
+        if script_path_and_name is not None:
+            result = Path(script_path_and_name).resolve().name
+        else:
+            result = None
+        return result
+
+    @classmethod
+    def get_script_filepath(cls, script_path_and_name):
+        if script_path_and_name is not None:
+            result = Path(script_path_and_name).resolve().parent
+        else:
+            result = None
+        return result

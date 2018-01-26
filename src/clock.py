@@ -33,8 +33,7 @@ except ImportError:
 from datetime import datetime as dttm
 from pathlib import Path, PurePath
 
-import utils
-
+import vauutils
 
 # noinspection PyAttributeOutsideInit
 class Clock(Frame):
@@ -49,7 +48,7 @@ class Clock(Frame):
         x_pos = int((scr_width - app_width) / 2)
         y_pos = int((scr_height - app_height) / 2)
 
-        script_path = (utils.get_run_info(__file__))[1]
+        script_path = (vauutils.RunInfo()).get_script_filepath(__file__)
 
         self.display_format = self.load_format_from_config_file(script_path)
         self.master.geometry(f"{app_width}x{app_height}+{x_pos}+{y_pos}")
