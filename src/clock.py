@@ -41,17 +41,21 @@ class Clock(Frame):
     def __init__(self, parent=None):
         Frame.__init__(self, parent)
         self.master = parent
-        scr_width = parent.winfo_screenwidth()
-        scr_height = parent.winfo_screenheight()
-        app_width = 700
-        app_height = 150
-        x_pos = int((scr_width - app_width) / 2)
-        y_pos = int((scr_height - app_height) / 2)
+        
+        # Following lines of code was there to have fixed with of the main 
+        # Window. Now we leave sizing of the window to tkinter.
+        #
+        # scr_width = parent.winfo_screenwidth()
+        # scr_height = parent.winfo_screenheight()
+        # app_width = 700
+        # app_height = 150
+        # x_pos = int((scr_width - app_width) / 2)
+        # y_pos = int((scr_height - app_height) / 2)
+        # self.master.geometry(f"{app_width}x{app_height}+{x_pos}+{y_pos}")
 
         script_path = (vauutils.RunInfo()).get_script_filepath(__file__)
-
         self.display_format = self.load_format_from_config_file(script_path)
-        self.master.geometry(f"{app_width}x{app_height}+{x_pos}+{y_pos}")
+        
         self.master.title("VAU - Clock")
         self.master.protocol("WM_DELETE_WINDOW", self.client_exit)
         self.master.resizable(False, False)
@@ -68,10 +72,10 @@ class Clock(Frame):
         fl.add_command(label=" Exit ", command=self.client_exit)
         menu.add_cascade(label=" File ", menu=fl)
 
-        self.label = Label(self, text="Clock", width=100, fg="red")
+        self.label = Label(self, text="Clock", fg="red")
         self.label.configure(font=("Ubuntu Light", 34))
         self.label.after(500, self.update_label)
-        self.label.pack()
+        self.label.pack(padx=30, pady=20)
         return
 
     def client_exit(self):
