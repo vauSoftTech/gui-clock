@@ -25,7 +25,7 @@
 """
 
 
-def get_run_info():
+def get_run_info(running_file_name):
     """
     This routine returns a tuple containing three things.
     1. Current Working Folder path
@@ -37,9 +37,13 @@ def get_run_info():
     from pathlib import Path, PurePath
     import os
 
-    curr_working_dir = PurePath( os.getcwd() )
-    script_name = PurePath( getframeinfo(currentframe()).filename )
-    script_path = PurePath( Path(script_name).resolve().parent )
+    curr_working_dir = PurePath(os.getcwd())
+    if running_file_name is not None:
+        script_name = PurePath(running_file_name)
+        script_path = PurePath(Path(script_name).resolve().parent)
+    else:
+        script_name = PurePath(getframeinfo(currentframe()).filename)
+        script_path = PurePath(Path(script_name).resolve().parent)
 
     return curr_working_dir, script_path, script_name
 

@@ -26,31 +26,39 @@
 try:
     import Tkinter as tk
     import Tkinter.messagebox
-except:
+except ImportError:
     from tkinter import *
     from tkinter import messagebox
 
 from datetime import datetime as dttm
+from pathlib import Path, PurePath
 
+import utils
+
+
+# noinspection PyAttributeOutsideInit
 class Clock(Frame):
 
-    def __init__(self,parent=None):
+    def __init__(self, parent=None):
         Frame.__init__(self, parent)
         self.master = parent
-        scr_width =  parent.winfo_screenwidth()
+        scr_width = parent.winfo_screenwidth()
         scr_height = parent.winfo_screenheight()
         app_width = 700
         app_height = 150
-        x_pos = int( (scr_width - app_width) / 2 )
-        y_pos = int( (scr_height - app_height) / 2 )
-        self.display_format = self.load_format_from_config_file()
+        x_pos = int((scr_width - app_width) / 2)
+        y_pos = int((scr_height - app_height) / 2)
+
+        script_path = (utils.get_run_info(__file__))[1]
+
+        self.display_format = self.load_format_from_config_file(script_path)
         self.master.geometry(f"{app_width}x{app_height}+{x_pos}+{y_pos}")
         self.master.title("VAU - Clock")
         self.master.protocol("WM_DELETE_WINDOW", self.client_exit)
         self.master.resizable(False, False)
         self.pack(fill=BOTH, expand=1)
         self.make_widgets()
-        photo = PhotoImage(file = 'config/logo.png')
+        photo = PhotoImage(file=script_path.joinpath('config/logo.png'))
         self.master.iconphoto(False, photo)
         return
 
@@ -61,7 +69,7 @@ class Clock(Frame):
         fl.add_command(label=" Exit ", command=self.client_exit)
         menu.add_cascade(label=" File ", menu=fl)
 
-        self.label = Label(self, text ="Clock", width=100, fg="red")
+        self.label = Label(self, text="Clock", width=100, fg="red")
         self.label.configure(font=("Ubuntu Light", 34))
         self.label.after(500, self.update_label)
         self.label.pack()
@@ -69,9 +77,9 @@ class Clock(Frame):
 
     def client_exit(self):
         if messagebox.askquestion("Decide", "Are you sure to exit?") == 'yes':
-           self.master.destroy()
+            self.master.destroy()
         else:
-           messagebox.showinfo('Return','OK then, you will now return to the application screen')
+            messagebox.showinfo('Return', 'OK then, you will now return to the application screen')
         return
 
     def update_label(self):
@@ -81,15 +89,22 @@ class Clock(Frame):
         self.label.after(500, self.update_label)
         return
 
-    def load_format_from_config_file(self):
+    def load_format_from_config_file(self, file_path):
         try:
             import configparser
             config = configparser.ConfigParser()
-            config.read('config/config.ini')
+            fl = file_path.joinpath('config/config.ini')
+            config.read(fl)
             return config['DEFAULT']['ClockDisplayFormat']
         except:
             return "{:%a, %b %d, %Y\n%X}"
 
-main = Tk()
-app = Clock(main)
-app.mainloop()
+
+def main():
+    main_win = Tk()
+    app = Clock(main_win)
+    app.mainloop()
+
+
+if __name__ == '__main__':
+    main()
